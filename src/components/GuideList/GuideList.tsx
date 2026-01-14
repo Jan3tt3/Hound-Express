@@ -1,57 +1,76 @@
-import { List, Card, Button } from "./GuideList.styles";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../store/store";
+import {
+  GuideCard,
+  ListContainer,
+  StatusBadge,
+  StatusSelect,
+} from "./GuideList.styles";
+import { selectGuide, updateGuideStatus } from "../../store/guideSlice";
 import type { Guide } from "../../types/Guide";
+import { addHistoryEntry } from "../../store/historySlice";
 
-interface Props {
-  guides: Guide[];
-  onUpdateStatus: (id: string, status: Guide["status"]) => void;
-  onShowHistory: (guide: Guide) => void;
-}
+export default function GuideList() {
+  const dispatch = useDispatch();
 
-export default function GuideList({
-  guides,
-  onUpdateStatus,
-  onShowHistory,
-}: Props) {
+  const guides = useSelector(
+    (state: RootState) => state.guides.guides
+  );
+
+  if (guides.length === 0) {
+    return <p>No hay guías registradas</p>;
+  }
+
   return (
-    <List>
+    <ListContainer>
       <h3>Lista de guías</h3>
 
-      {guides.length === 0 && <p>No hay guías registradas</p>}
-
       {guides.map((guide) => (
-        <Card key={guide.id}>
-          <p>
-            <strong>Cliente:</strong> {guide.client}
-          </p>
-          <p>
-            <strong>Origen:</strong> {guide.origin}
-          </p>
-          <p>
-            <strong>Destino:</strong> {guide.destination}
-          </p>
-          <p>
-            <strong>Estado:</strong> {guide.status}
-          </p>
-
+        <GuideCard key={guide.id}>
           <div>
-            <Button
-              onClick={() => onUpdateStatus(guide.id, "En tránsito")}
-            >
-              En tránsito
-            </Button>
+            <p><strong>Cliente:</strong> {guide.client}</p>
+            <p><strong>Origen:</strong> {guide.origin}</p>
+            <p><strong>Destino:</strong> {guide.destination}</p>
 
-            <Button
-              onClick={() => onUpdateStatus(guide.id, "Entregada")}
-            >
-              Entregar
-            </Button>
+            <StatusBadge status={guide.status}>
+              {guide.status}
+            </StatusBadge>
+            <button onClick={() => dispatch(selectGuide(guide.id))}
+>
+  Ver historial
+</button>
 
-            <Button onClick={() => onShowHistory(guide)}>
-              Ver historial
-            </Button>
           </div>
-        </Card>
+
+          <StatusSelect
+            value={guide.status}
+            onChange={(e) => {
+  const newStatus = e.target.value as Guide["status"];
+
+  dispatch(
+    updateGuideStatus({
+      id: guide.id,
+      status: newStatus,
+    })
+  );
+
+  dispatch(
+    addHistoryEntry({
+      id: crypto.randomUUID(),
+      guideId: guide.id,
+      date: new Date().toLocaleString(),
+      oldStatus: guide.status,
+      newStatus,
+    })
+  );
+}}
+          >
+            <option value="Activa">Activa</option>
+            <option value="En tránsito">En tránsito</option>
+            <option value="Entregada">Entregada</option>
+          </StatusSelect>
+        </GuideCard>
       ))}
-    </List>
+    </ListContainer>
   );
 }

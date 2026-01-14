@@ -1,20 +1,43 @@
-import { Panel, Counter } from "./StatusPanel.styles";
-import type { Guide } from "../../types/Guide";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
+import type { GuideStatus } from "../../types/Guide";
+import { Panel, StatCard, StatLabel, StatNumber } from "./StatusPanel.styles";
 
-interface Props {
-  guides: Guide[];
-}
 
-export default function StatusPanel({ guides }: Props) {
-  const active = guides.filter((g) => g.status === "Activa").length;
-  const transit = guides.filter((g) => g.status === "En tránsito").length;
-  const delivered = guides.filter((g) => g.status === "Entregada").length;
+export default function StatusPanel() {
+  const guides = useSelector(
+    (state: RootState) => state.guides.guides
+  );
+
+  const countByStatus = (status: GuideStatus) =>
+    guides.filter((g) => g.status === status).length;
 
   return (
     <Panel>
-      <Counter>Activas: {active}</Counter>
-      <Counter>En tránsito: {transit}</Counter>
-      <Counter>Entregadas: {delivered}</Counter>
+      <StatCard>
+        <StatNumber>{guides.length}</StatNumber>
+        <StatLabel>Total</StatLabel>
+      </StatCard>
+
+      <StatCard>
+        <StatNumber>{countByStatus("Pendiente")}</StatNumber>
+        <StatLabel>Pendientes</StatLabel>
+      </StatCard>
+
+      <StatCard>
+        <StatNumber>{countByStatus("Activa")}</StatNumber>
+        <StatLabel>Activas</StatLabel>
+      </StatCard>
+
+      <StatCard>
+        <StatNumber>{countByStatus("En tránsito")}</StatNumber>
+        <StatLabel>En tránsito</StatLabel>
+      </StatCard>
+
+      <StatCard>
+        <StatNumber>{countByStatus("Entregada")}</StatNumber>
+        <StatLabel>Entregadas</StatLabel>
+      </StatCard>
     </Panel>
   );
 }

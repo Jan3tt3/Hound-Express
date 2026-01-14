@@ -1,25 +1,15 @@
+
+export type GuideStatus =
+  | "Pendiente"
+  | "Activa"
+  | "En tránsito"
+  | "Entregada";
+
 export interface Guide {
   id: string;
   client: string;
   origin: string;
   destination: string;
-  status: "Activa" | "En tránsito" | "Entregada";
+  status: GuideStatus;
   createdAt: string;
 }
-
-/*export interface HistoryEntry {
-  date: string
-  status: string
-}
-
-export interface Guide {
-  id: string
-  client: string
-  origin: string
-  destination: string
-  status: string
-  createdAt: string
-  history: HistoryEntry[]
-}
-
-*/

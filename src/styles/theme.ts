@@ -13,6 +13,11 @@ const theme = {
     md: "1rem",
     lg: "2rem",
   },
+   borderRadius: {
+    sm: "6px",
+    md: "12px",
+    lg: "20px",
+  },
 };
 
 export default theme;

@@ -1,39 +1,53 @@
-import { Overlay, Modal, Button } from "./HistoryModal.styles";
-import type { Guide } from "../../types/Guide";
-import type { HistoryEntry } from "../../types/HistoryEntry";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../store/store";
+import { clearSelectedGuide, selectGuide } from "../../store/guideSlice";
+import {
+  Overlay,
+  Modal,
+  CloseButton,
+} from "./HistoryModal.styles";
 
-interface Props {
-  guide: Guide;
-  history: HistoryEntry[];
-  onClose: () => void;
-}
+export default function HistoryModal() {
+  const dispatch = useDispatch();
 
-export default function HistoryModal({ guide, history, onClose }: Props) {
-  const filteredHistory = history.filter(
-    (entry) => entry.guideId === guide.id
+  const selectedGuideId = useSelector(
+    (state: RootState) => state.guides.selectedGuideId
+  );
+
+  const history = useSelector(
+    (state: RootState) => state.history.entries
+  );
+
+  if (!selectedGuideId) return null;
+
+  const guideHistory = history.filter(
+    (h) => h.guideId === selectedGuideId
   );
 
   return (
     <Overlay>
       <Modal>
-        <h2>Historial de la guía</h2>
-        <p><strong>ID:</strong> {guide.id}</p>
-        <p><strong>Cliente:</strong> {guide.client}</p>
+        <CloseButton onClick={() => dispatch(clearSelectedGuide())}>
+          ✖
+        </CloseButton>
 
-        {filteredHistory.length === 0 ? (
-          <p>No hay historial disponible</p>
-        ) : (
-          <ul>
-            {filteredHistory.map((entry) => (
-              <li key={entry.id}>
-                <strong>{entry.date}</strong><br />
-                {entry.oldStatus} → {entry.newStatus}
-              </li>
-            ))}
-          </ul>
+        <h3>Historial de la guía</h3>
+
+        {guideHistory.length === 0 && (
+          <p>No hay historial para esta guía</p>
         )}
 
-        <Button onClick={onClose}>Cerrar</Button>
+        {guideHistory.map((entry) => (
+          <div key={entry.id}>
+            <p>
+              <strong>{entry.date}</strong>
+            </p>
+            <p>
+              {entry.oldStatus} → {entry.newStatus}
+            </p>
+            <hr />
+          </div>
+        ))}
       </Modal>
     </Overlay>
   );

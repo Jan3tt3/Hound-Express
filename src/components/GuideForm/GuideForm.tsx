@@ -1,78 +1,41 @@
-// src/components/GuideForm/GuideForm.tsx
-import { useState } from "react";
-import { Form, Input, Select, Button } from "./GuideForm.styles";
+import { useDispatch } from "react-redux";
 import type { Guide } from "../../types/Guide";
+import { Form, Input, Select, Button } from "./GuideForm.styles";
+import { addGuide } from "../../store/guideSlice";
 
+export default function GuideForm() {
+  const dispatch = useDispatch();
 
-interface Props {
-  onAddGuide: (guide: Guide) => void;
-}
-
-export default function GuideForm({ onAddGuide }: Props) {
-  const [client, setClient] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [destination, setDestination] = useState("");
-  const [status, setStatus] = useState<Guide["status"]>("Activa");
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const newGuide: Guide = {
+    const form = e.currentTarget;
+    const guide: Guide = {
       id: crypto.randomUUID(),
-      client,
-      origin,
-      destination,
-      status,
+      client: form.client.value,
+      origin: form.origin.value,
+      destination: form.destination.value,
+      status: form.status.value,
       createdAt: new Date().toISOString(),
     };
 
-    onAddGuide(newGuide);
-
-    // Limpiar formulario
-    setClient("");
-    setOrigin("");
-    setDestination("");
-    setStatus("Activa");
+    dispatch(addGuide(guide));
+    form.reset();
   };
 
   return (
     <Form onSubmit={handleSubmit}>
-      <h2>Registrar Nueva Guía</h2>
+      <Input name="client" placeholder="Cliente" required />
+      <Input name="origin" placeholder="Origen" required />
+      <Input name="destination" placeholder="Destino" required />
 
-      <Input
-        type="text"
-        placeholder="Cliente"
-        value={client}
-        onChange={(e) => setClient(e.target.value)}
-        required
-      />
-
-      <Input
-        type="text"
-        placeholder="Origen"
-        value={origin}
-        onChange={(e) => setOrigin(e.target.value)}
-        required
-      />
-
-      <Input
-        type="text"
-        placeholder="Destino"
-        value={destination}
-        onChange={(e) => setDestination(e.target.value)}
-        required
-      />
-
-      <Select
-        value={status}
-        onChange={(e) => setStatus(e.target.value as Guide["status"])}
-      >
+      <Select name="status">
         <option value="Activa">Activa</option>
         <option value="En tránsito">En tránsito</option>
         <option value="Entregada">Entregada</option>
       </Select>
 
-      <Button type="submit">Guardar Guía</Button>
+      <Button type="submit">Guardar guía</Button>
     </Form>
   );
 }
