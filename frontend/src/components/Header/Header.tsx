@@ -1,28 +1,16 @@
-
-// src/components/Header/Header.tsx
 import { HeaderContainer, LogoContainer, Logo, Title } from "./Header.styles";
 import logo from "../../assets/logo-Hound_Express.png";
 
 export default function Header() {
   return (
-    <HeaderContainer>
+    <HeaderContainer as="header" role="banner">
       <LogoContainer>
-        <Logo src={logo} alt="Hound Express Logo" />
-        <Title>Hound Express</Title>
+        <Logo 
+          src={logo} 
+          alt="Logo de Hound Express, servicio de envíos rápidos en México" 
+        />
+        <Title as="h1">Hound Express</Title>
       </LogoContainer>
     </HeaderContainer>
   );
 }
-
-/*
-import { Container, Title } from "./Header.styles";
-
-export default function Header() {
-  return (
-    <Container>
-      <Title>Hound Express</Title>
-    </Container>
-  );
-}
-
-*/

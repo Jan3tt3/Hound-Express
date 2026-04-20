@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store/store";
-import { clearSelectedGuide, selectGuide } from "../../store/guideSlice";
+import { clearSelectedGuide } from "../../store/guideSlice";
 import {
   Overlay,
   Modal,
@@ -25,29 +25,45 @@ export default function HistoryModal() {
   );
 
   return (
-    <Overlay>
+    <Overlay
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
       <Modal>
-        <CloseButton onClick={() => dispatch(clearSelectedGuide())}>
+        {/* Botón cerrar */}
+        <CloseButton
+          onClick={() => dispatch(clearSelectedGuide())}
+          aria-label="Cerrar historial"
+        >
           ✖
         </CloseButton>
 
-        <h3>Historial de la guía</h3>
+        {/* Título */}
+        <h2 id="modal-title">Historial de la guía</h2>
 
-        {guideHistory.length === 0 && (
-          <p>No hay historial para esta guía</p>
+        {/* Contenido */}
+        {guideHistory.length === 0 ? (
+          <p aria-live="polite">
+            No hay historial para esta guía
+          </p>
+        ) : (
+          <ul>
+            {guideHistory.map((entry) => (
+              <li key={entry.id}>
+                <article>
+                  <p>
+                    <strong>{entry.date}</strong>
+                  </p>
+                  <p>
+                    Estado: {entry.oldStatus} → {entry.newStatus}
+                  </p>
+                  <hr />
+                </article>
+              </li>
+            ))}
+          </ul>
         )}
-
-        {guideHistory.map((entry) => (
-          <div key={entry.id}>
-            <p>
-              <strong>{entry.date}</strong>
-            </p>
-            <p>
-              {entry.oldStatus} → {entry.newStatus}
-            </p>
-            <hr />
-          </div>
-        ))}
       </Modal>
     </Overlay>
   );
