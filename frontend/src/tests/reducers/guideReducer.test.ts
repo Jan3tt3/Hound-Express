@@ -1,3 +1,4 @@
+import { GUIDE_STATUS } from "../../components/StatusPanel/StatusPanel";
 import guidesReducer, { addGuide, updateGuideStatus } from "../../store/guideSlice";
 
 describe("guidesSlice reducer", () => {
@@ -6,20 +7,35 @@ describe("guidesSlice reducer", () => {
 
     const newGuide = {
       id: "1",
-      sender: "Juan",
-      receiver: "Maria",
-      status: "Pendiente",
+      client: "Juan",
+      origin: "CDMX",
+      destination: "MTY",
+      status: GUIDE_STATUS.PENDING,
+      createdAt: new Date().toISOString(),
+      lastUpdate: new Date().toISOString(),
+      history: [],
     };
 
     const state = guidesReducer(initialState, addGuide(newGuide));
 
     expect(state.guides.length).toBe(1);
-    expect(state.guides[0].sender).toBe("Juan");
+    expect(state.guides[0].client).toBe("Juan");
   });
 
   test("debe actualizar el estado de la guía", () => {
     const initialState = {
-      guides: [{ id: "1", sender: "Juan", receiver: "Maria", status: "Pendiente" }],
+      guides: [
+        {
+          id: "1",
+          client: "Juan",
+          origin: "CDMX",
+          destination: "MTY",
+          status: GUIDE_STATUS.PENDING,
+          createdAt: new Date().toISOString(),
+          lastUpdate: new Date().toISOString(),
+          history: [],
+        },
+      ],
       selectedGuideId: null,
     };
 

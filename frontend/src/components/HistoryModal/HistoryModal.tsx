@@ -5,6 +5,10 @@ import {
   Overlay,
   Modal,
   CloseButton,
+  Timeline,
+  TimelineItem,
+  StatusBadge,
+  DateText,
 } from "./HistoryModal.styles";
 
 export default function HistoryModal() {
@@ -20,18 +24,19 @@ export default function HistoryModal() {
 
   if (!selectedGuideId) return null;
 
-  const guideHistory = history.filter(
-    (h) => h.guideId === selectedGuideId
-  );
+  const guideHistory = history
+    .filter((h) => h.guideId === selectedGuideId)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <Overlay
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
+      onClick={() => dispatch(clearSelectedGuide())}
     >
-      <Modal>
-        {/* Botón cerrar */}
+      <Modal onClick={(e) => e.stopPropagation()}>
+        
         <CloseButton
           onClick={() => dispatch(clearSelectedGuide())}
           aria-label="Cerrar historial"
@@ -39,30 +44,32 @@ export default function HistoryModal() {
           ✖
         </CloseButton>
 
-        {/* Título */}
         <h2 id="modal-title">Historial de la guía</h2>
 
-        {/* Contenido */}
         {guideHistory.length === 0 ? (
-          <p aria-live="polite">
-            No hay historial para esta guía
-          </p>
+          <p>No hay historial para esta guía</p>
         ) : (
-          <ul>
+          <Timeline>
             {guideHistory.map((entry) => (
-              <li key={entry.id}>
-                <article>
-                  <p>
-                    <strong>{entry.date}</strong>
-                  </p>
-                  <p>
-                    Estado: {entry.oldStatus} → {entry.newStatus}
-                  </p>
-                  <hr />
-                </article>
-              </li>
+              <TimelineItem key={entry.id}>
+                
+                <DateText>{entry.date}</DateText>
+
+                <div>
+                  <StatusBadge status={entry.oldStatus}>
+                    {entry.oldStatus}
+                  </StatusBadge>
+
+                  <span style={{ margin: "0 8px" }}>→</span>
+
+                  <StatusBadge status={entry.newStatus}>
+                    {entry.newStatus}
+                  </StatusBadge>
+                </div>
+
+              </TimelineItem>
             ))}
-          </ul>
+          </Timeline>
         )}
       </Modal>
     </Overlay>

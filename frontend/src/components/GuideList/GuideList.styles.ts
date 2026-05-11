@@ -2,34 +2,66 @@ import styled from "styled-components";
 
 export const ListContainer = styled.section`
   margin-top: 30px;
+
+  ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+  }
 `;
 
-export const GuideCard = styled.div`
+export const GuideCard = styled.li`
   background: white;
-  border-radius: 14px;
-  padding: 16px;
-  margin-bottom: 14px;
+  border-radius: 16px;
+  padding: 18px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  flex-direction: column;
+  gap: 12px;
+
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+  }
 `;
 
 export const StatusBadge = styled.span<{ status: string }>`
-  display: inline-block;
+  align-self: flex-start;
   padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
   font-weight: 600;
 
-  background-color: ${({ status }) =>
-    status === "Activa"
-      ? "#4caf50"
-      : status === "En tránsito"
-      ? "#ff9800"
-      : "#2196f3"};
+  background-color: ${({ status }) => {
+    switch (status) {
+      case "Pendiente":
+        return "#f4a26133";
+      case "En tránsito":
+        return "#e9c46a33";
+      case "Entregada":
+        return "#2a9d8f33";
+      default:
+        return "#ccc";
+    }
+  }};
 
-  color: white;
+  color: ${({ status }) => {
+    switch (status) {
+      case "Pendiente":
+        return "#f4a261";
+      case "En tránsito":
+        return "#e9c46a";
+      case "Entregada":
+        return "#2a9d8f";
+      default:
+        return "#333";
+    }
+  }};
 `;
 
 export const StatusSelect = styled.select`
@@ -46,16 +78,19 @@ export const Actions = styled.div`
 `;
 
 export const ActionButton = styled.button`
-  background-color: #1976d2;
+  background-color: ${({ theme }) => theme.colors.primary};
   color: white;
   border: none;
-  padding: 6px 10px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 0.8rem;
 
+  transition: all 0.2s ease;
+
   &:hover {
-    opacity: 0.9;
+    transform: scale(1.05);
+    opacity: 0.95;
   }
 `;
 

@@ -1,7 +1,9 @@
 import { useDispatch } from "react-redux";
-import type { Guide } from "../../types/Guide";
+
 import { Form, Input, Select, Button } from "./GuideForm.styles";
 import { addGuide } from "../../store/guideSlice";
+import type { Guide } from "../../types";
+
 
 export default function GuideForm() {
   const dispatch = useDispatch();
@@ -10,14 +12,18 @@ export default function GuideForm() {
     e.preventDefault();
 
     const form = e.currentTarget;
+    const now = new Date().toISOString();
+
     const guide: Guide = {
-      id: crypto.randomUUID(),
-      client: form.client.value,
-      origin: form.origin.value,
-      destination: form.destination.value,
-      status: form.status.value,
-      createdAt: new Date().toISOString(),
-    };
+  id: crypto.randomUUID(),
+  client: form.client.value,
+  origin: form.origin.value,
+  destination: form.destination.value,
+  status: form.status.value as Guide["status"],
+  createdAt: now,
+  lastUpdate: now,
+  history: [],
+};
 
     dispatch(addGuide(guide));
     form.reset();
@@ -63,7 +69,7 @@ export default function GuideForm() {
       {/* Estado */}
       <label htmlFor="status">Estado inicial</label>
       <Select id="status" name="status" aria-label="Seleccionar estado de la guía">
-        <option value="Activa">Activa</option>
+        <option value="Pendiente">Pendiente</option>
         <option value="En tránsito">En tránsito</option>
         <option value="Entregada">Entregada</option>
       </Select>

@@ -1,11 +1,13 @@
 import guidesReducer, { addGuide, updateGuideStatus } from "../../store/guideSlice";
+import { createMockGuide } from "../utils/factories/guideFactory";
+
 
 test("addGuide agrega una guía", () => {
   const state = { guides: [], selectedGuideId: null };
 
   const newState = guidesReducer(
     state,
-    addGuide({ id: "1", status: "Pendiente" })
+    addGuide(createMockGuide({ id: "1" }))
   );
 
   expect(newState.guides.length).toBe(1);
@@ -13,7 +15,7 @@ test("addGuide agrega una guía", () => {
 
 test("updateGuideStatus cambia estado", () => {
   const state = {
-    guides: [{ id: "1", status: "Pendiente" }],
+    guides: [createMockGuide({ id: "1", status: "Pendiente" })],
     selectedGuideId: null,
   };
 

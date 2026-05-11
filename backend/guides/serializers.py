@@ -13,15 +13,7 @@ class GuideSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Guide
-        fields = [
-            'id',
-            'client',
-            'origin',
-            'destination',
-            'status',
-            'lastUpdate',
-            'history',
-        ]
+        fields = '__all__'
 def create(self, validated_data):
     guide = Guide.objects.create(**validated_data)
     GuideHistory.objects.create(

@@ -4,20 +4,9 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { ThemeProvider } from "styled-components";
 import guidesReducer from "../../store/guideSlice";
+import  theme  from "../../styles/theme";
 
-// ✅ Tema COMPLETO para tests
-const theme = {
-  colors: {
-    white: "#fff",
-    primary: "#2563eb",
-    card: "#f9fafb",
-  },
-  borderRadius: {
-    sm: "4px",
-    md: "8px",
-    lg: "12px",
-  },
-};
+<ThemeProvider theme={theme}>{ui}</ThemeProvider>
 
 export function renderWithProviders(
   ui: React.ReactElement,

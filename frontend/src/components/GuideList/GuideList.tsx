@@ -5,6 +5,8 @@ import {
   ListContainer,
   StatusBadge,
   StatusSelect,
+  Actions,
+  ActionButton,
 } from "./GuideList.styles";
 import { selectGuide, updateGuideStatus } from "../../store/guideSlice";
 import type { Guide } from "../../types/Guide";
@@ -34,28 +36,37 @@ export default function GuideList() {
           <GuideCard as="li" key={guide.id}>
             <article aria-labelledby={`guide-${guide.id}`}>
               
+              {/* Título */}
               <h3 id={`guide-${guide.id}`}>
                 Guía de {guide.client}
               </h3>
 
-              <p><strong>Cliente:</strong> {guide.client}</p>
-              <p><strong>Origen:</strong> {guide.origin}</p>
-              <p><strong>Destino:</strong> {guide.destination}</p>
-
-              <StatusBadge 
+              {/* Estado */}
+              <StatusBadge
                 status={guide.status}
                 aria-label={`Estado actual: ${guide.status}`}
               >
                 {guide.status}
               </StatusBadge>
 
-              <button
-                onClick={() => dispatch(selectGuide(guide.id))}
-                aria-label={`Ver historial de la guía de ${guide.client}`}
-              >
-                Ver historial
-              </button>
+              {/* Información */}
+              <div>
+                <p><strong>Cliente:</strong> {guide.client}</p>
+                <p><strong>Origen:</strong> {guide.origin}</p>
+                <p><strong>Destino:</strong> {guide.destination}</p>
+              </div>
 
+              {/* Acciones */}
+              <Actions>
+                <ActionButton
+                  onClick={() => dispatch(selectGuide(guide.id))}
+                  aria-label={`Ver historial de la guía de ${guide.client}`}
+                >
+                  Ver historial
+                </ActionButton>
+              </Actions>
+
+              {/* Cambio de estado */}
               <label htmlFor={`status-${guide.id}`}>
                 Cambiar estado
               </label>
@@ -84,7 +95,7 @@ export default function GuideList() {
                   );
                 }}
               >
-                <option value="Activa">Activa</option>
+                <option value="Pendiente">Pendiente</option>
                 <option value="En tránsito">En tránsito</option>
                 <option value="Entregada">Entregada</option>
               </StatusSelect>

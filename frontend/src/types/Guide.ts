@@ -1,7 +1,5 @@
-
 export type GuideStatus =
   | "Pendiente"
-  | "Activa"
   | "En tránsito"
   | "Entregada";
 
@@ -12,4 +10,6 @@ export interface Guide {
   destination: string;
   status: GuideStatus;
   createdAt: string;
+  lastUpdate: string;
+  history: any[];
 }

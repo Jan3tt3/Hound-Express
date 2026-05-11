@@ -7,6 +7,7 @@ const theme = {
     text: "#333333",
     border: "#e2e8f0",
     success: "#2ecc71",
+    surface: "#ffffff",
   },
   spacing: {
     sm: "0.5rem",

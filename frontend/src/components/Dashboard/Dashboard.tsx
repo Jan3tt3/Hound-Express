@@ -1,31 +1,44 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Guide } from '../../types'
+import type { Guide } from "../../types";
+import {
+  Container,
+  Title,
+  Grid,
+  Card,
+  Number,
+  Label,
+} from "./Dashboard.styles";
 
-
-const Card = styled.div`
-background: ${({ theme }) => theme.colors.surface};
-padding: 16px;
-border-radius: 8px;
-box-shadow: 0 2px 8px rgba(2,6,23,0.06);
-`
-
-
-type Props = { guides: Guide[] }
-
+type Props = { guides: Guide[] };
 
 export default function Dashboard({ guides }: Props) {
-const total = guides.length
-const inTransit = guides.filter(g => g.status === 'En tránsito').length
-const delivered = guides.filter(g => g.status === 'Entregada').length
+  const total = guides.length;
+  const inTransit = guides.filter(
+    (g) => g.status === "En tránsito"
+  ).length;
+  const delivered = guides.filter(
+    (g) => g.status === "Entregada"
+  ).length;
 
+  return (
+    <Container>
+      <Title>Panel de estado</Title>
 
-return (
-<Card>
-<h3>Panel de estado</h3>
-<p>Total: {total}</p>
-<p>En tránsito: {inTransit}</p>
-<p>Entregadas: {delivered}</p>
-</Card>
-)
+      <Grid>
+        <Card>
+          <Number>{total}</Number>
+          <Label>Total</Label>
+        </Card>
+
+        <Card>
+          <Number>{inTransit}</Number>
+          <Label>En tránsito</Label>
+        </Card>
+
+        <Card>
+          <Number>{delivered}</Number>
+          <Label>Entregadas</Label>
+        </Card>
+      </Grid>
+    </Container>
+  );
 }

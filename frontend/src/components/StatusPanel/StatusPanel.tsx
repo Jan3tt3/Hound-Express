@@ -1,7 +1,13 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store/store";
 import type { GuideStatus } from "../../types/Guide";
-import { Panel, StatCard, StatLabel, StatNumber } from "./StatusPanel.styles";
+import { Panel, StatCard, StatLabel, StatNumber, List, ListItem} from "./StatusPanel.styles";
+
+export const GUIDE_STATUS = {
+  PENDING: "Pendiente",
+  IN_TRANSIT: "En tránsito",
+  DELIVERED: "Entregada",
+} as const;
 
 export default function StatusPanel() {
   const guides = useSelector(
@@ -15,57 +21,41 @@ export default function StatusPanel() {
     <Panel as="section" aria-labelledby="status-panel-title">
       <h2 id="status-panel-title">Resumen de envíos</h2>
 
-      <ul>
-        {/* Total */}
-        <li>
-          <StatCard as="article" aria-label="Total de guías registradas">
-            <StatNumber aria-live="polite">
-              {guides.length}
-            </StatNumber>
-            <StatLabel>Total</StatLabel>
-          </StatCard>
-        </li>
+      <List>
+  <ListItem>
+    <StatCard>
+      <StatNumber $label="Total">{guides.length}</StatNumber>
+      <StatLabel>Total</StatLabel>
+    </StatCard>
+  </ListItem>
 
-        {/* Pendientes */}
-        <li>
-          <StatCard as="article" aria-label="Guías pendientes">
-            <StatNumber aria-live="polite">
-              {countByStatus("Pendiente")}
-            </StatNumber>
-            <StatLabel>Pendientes</StatLabel>
-          </StatCard>
-        </li>
+  <ListItem>
+    <StatCard>
+      <StatNumber $label="Pendientes">
+  {countByStatus(GUIDE_STATUS.PENDING)}
+</StatNumber>
+      <StatLabel>Pendientes</StatLabel>
+    </StatCard>
+  </ListItem>
 
-        {/* Activas */}
-        <li>
-          <StatCard as="article" aria-label="Guías activas">
-            <StatNumber aria-live="polite">
-              {countByStatus("Activa")}
-            </StatNumber>
-            <StatLabel>Activas</StatLabel>
-          </StatCard>
-        </li>
+<ListItem>
+    <StatCard>
+      <StatNumber $label="En tránsito">
+  {countByStatus(GUIDE_STATUS.IN_TRANSIT)}
+</StatNumber>
+      <StatLabel>En tránsito</StatLabel>
+    </StatCard>
+  </ListItem>
 
-        {/* En tránsito */}
-        <li>
-          <StatCard as="article" aria-label="Guías en tránsito">
-            <StatNumber aria-live="polite">
-              {countByStatus("En tránsito")}
-            </StatNumber>
-            <StatLabel>En tránsito</StatLabel>
-          </StatCard>
-        </li>
-
-        {/* Entregadas */}
-        <li>
-          <StatCard as="article" aria-label="Guías entregadas">
-            <StatNumber aria-live="polite">
-              {countByStatus("Entregada")}
-            </StatNumber>
-            <StatLabel>Entregadas</StatLabel>
-          </StatCard>
-        </li>
-      </ul>
+  <ListItem>
+    <StatCard>
+      <StatNumber $label="Entregadas">
+  {countByStatus(GUIDE_STATUS.DELIVERED)}
+</StatNumber>
+      <StatLabel>Entregadas</StatLabel>
+    </StatCard>
+  </ListItem>
+</List>
     </Panel>
   );
 }
