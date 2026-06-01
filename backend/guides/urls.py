@@ -1,10 +1,7 @@
-from django.contrib import admin
-from django.urls import path
-from .views import GuideList, GuideStatusUpdate, GuideCreateView
+from rest_framework.routers import DefaultRouter
+from .views import GuideViewSet
 
-urlpatterns = [
-    path("guides/", GuideList.as_view(), name="guide-list-create"),
-    path("guides/<uuid:id>/status/", GuideStatusUpdate.as_view()),
+router = DefaultRouter()
+router.register(r'guides', GuideViewSet)
 
-]
-   
+urlpatterns = router.urls

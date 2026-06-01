@@ -1,5 +1,15 @@
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../../store/store";
+import { useEffect } from "react";
+
+import {
+  useSelector,
+  useDispatch,
+} from "react-redux";
+
+import type {
+  RootState,
+  AppDispatch,
+} from "../../store/store";
+
 import {
   GuideCard,
   ListContainer,
@@ -8,16 +18,42 @@ import {
   Actions,
   ActionButton,
 } from "./GuideList.styles";
-import { selectGuide, updateGuideStatus } from "../../store/guideSlice";
+
+import {
+  selectGuide,
+  fetchGuides,
+  updateGuideStatusAsync,
+  deleteGuideAsync,
+} from "../../store/guideSlice";
+
 import type { Guide } from "../../types/Guide";
-import { addHistoryEntry } from "../../store/historySlice";
+
 
 export default function GuideList() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const guides = useSelector(
-    (state: RootState) => state.guides.guides
+  const {
+    guides,
+    loading,
+    error,
+  } = useSelector(
+    (state: RootState) => state.guides
   );
+
+  useEffect(() => {dispatch(fetchGuides());
+
+  }, [dispatch]);
+
+
+  if (loading) {
+    return <p>Cargando guías...</p>;
+  }
+
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
 
   if (guides.length === 0) {
     return (
@@ -27,80 +63,90 @@ export default function GuideList() {
     );
   }
 
+
   return (
-    <ListContainer as="section" aria-labelledby="guide-list-title">
-      <h2 id="guide-list-title">Lista de guías</h2>
-
-      <ul>
-        {guides.map((guide) => (
-          <GuideCard as="li" key={guide.id}>
-            <article aria-labelledby={`guide-${guide.id}`}>
-              
-              {/* Título */}
-              <h3 id={`guide-${guide.id}`}>
-                Guía de {guide.client}
-              </h3>
-
-              {/* Estado */}
-              <StatusBadge
-                status={guide.status}
-                aria-label={`Estado actual: ${guide.status}`}
-              >
-                {guide.status}
+  <ListContainer as="section" aria-labelledby="guide-list-title">
+    <h2 id="guide-list-title">Lista de guías</h2>
+    <ul>
+      {guides.map((guide) => (
+        <GuideCard as="li" key={guide.id}>
+           <article>
+            <h3>Guía de {guide.client}</h3>
+              <StatusBadge $status={guide.currentStatus}>
+                {guide.currentStatus}
               </StatusBadge>
-
-              {/* Información */}
               <div>
-                <p><strong>Cliente:</strong> {guide.client}</p>
-                <p><strong>Origen:</strong> {guide.origin}</p>
-                <p><strong>Destino:</strong> {guide.destination}</p>
-              </div>
+                <p><strong>Tracking:</strong>
+                  {" "}
+                  {guide.trackingNumber}
+                </p>
+                <p><strong>Cliente:</strong>
+                  {" "}
+                  {guide.client}
+                </p>
+                <p><strong>Origen:</strong>
+                  {" "}
+                  {guide.origin}
+                </p>
 
-              {/* Acciones */}
+                <p><strong>Destino:</strong>
+                  {" "}
+                  {guide.destination}
+                </p>
+                </div>
+
+
               <Actions>
-                <ActionButton
-                  onClick={() => dispatch(selectGuide(guide.id))}
-                  aria-label={`Ver historial de la guía de ${guide.client}`}
-                >
+                <ActionButton onClick={() =>dispatch(selectGuide(guide.id))}>
                   Ver historial
-                </ActionButton>
-              </Actions>
+                  </ActionButton>
+                  <ActionButton onClick={() => {if (
+                    window.confirm("¿Deseas eliminar esta guía?")) {
+                      dispatch(deleteGuideAsync(guide.id));}
+                      }}>Eliminar
+                      </ActionButton>
+                      </Actions>
+                      <label htmlFor={`status-${guide.id}`}>
+                        Cambiar estado
+                        </label>
 
-              {/* Cambio de estado */}
-              <label htmlFor={`status-${guide.id}`}>
-                Cambiar estado
-              </label>
 
               <StatusSelect
+
                 id={`status-${guide.id}`}
-                value={guide.status}
+
+                value={guide.currentStatus}
+
                 onChange={(e) => {
-                  const newStatus = e.target.value as Guide["status"];
 
                   dispatch(
-                    updateGuideStatus({
+                    updateGuideStatusAsync({
+
                       id: guide.id,
-                      status: newStatus,
-                    })
-                  );
 
-                  dispatch(
-                    addHistoryEntry({
-                      id: crypto.randomUUID(),
-                      guideId: guide.id,
-                      date: new Date().toLocaleString(),
-                      oldStatus: guide.status,
-                      newStatus,
+                      currentStatus:
+                        e.target.value as Guide["currentStatus"],
                     })
                   );
                 }}
               >
-                <option value="Pendiente">Pendiente</option>
-                <option value="En tránsito">En tránsito</option>
-                <option value="Entregada">Entregada</option>
+
+                <option value="Pendiente">
+                  Pendiente
+                </option>
+
+                <option value="En tránsito">
+                  En tránsito
+                </option>
+
+                <option value="Entregada">
+                  Entregada
+                </option>
+
               </StatusSelect>
 
             </article>
+
           </GuideCard>
         ))}
       </ul>

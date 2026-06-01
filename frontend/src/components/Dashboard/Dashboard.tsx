@@ -1,4 +1,5 @@
-import type { Guide } from "../../types";
+
+import type { Guide } from "../../types/Guide";
 import {
   Container,
   Title,

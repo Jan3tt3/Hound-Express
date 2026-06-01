@@ -30,15 +30,15 @@ export const GuideCard = styled.li`
   }
 `;
 
-export const StatusBadge = styled.span<{ status: string }>`
+export const StatusBadge = styled.span<{ $status: string }>`
   align-self: flex-start;
   padding: 6px 12px;
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
 
-  background-color: ${({ status }) => {
-    switch (status) {
+  background-color: ${({ $status }) => {
+    switch ($status) {
       case "Pendiente":
         return "#f4a26133";
       case "En tránsito":
@@ -50,8 +50,8 @@ export const StatusBadge = styled.span<{ status: string }>`
     }
   }};
 
-  color: ${({ status }) => {
-    switch (status) {
+  color: ${({ $status }) => {
+    switch ($status) {
       case "Pendiente":
         return "#f4a261";
       case "En tránsito":

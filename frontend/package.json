@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.11.2",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.36",
+    "axios": "^1.16.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",

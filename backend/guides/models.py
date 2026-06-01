@@ -13,12 +13,8 @@ class Guide(models.Model):
     ]
 
     id = models.AutoField(primary_key=True)
-    trackingNumber = models.CharField(max_length=15, unique=True)
-    client = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="guides"
-    )
+    trackingNumber = models.CharField(max_length=25, unique=True)
+    client = models.CharField(max_length=100)
     origin = models.CharField(max_length=100)
     destination = models.CharField(max_length=100)
     createdAt = models.DateTimeField(default=timezone.now)
@@ -30,10 +26,17 @@ class Guide(models.Model):
 
 class GuideHistory(models.Model):
     id = models.AutoField(primary_key=True)
-    guide = models.ForeignKey(Guide, on_delete=models.CASCADE, related_name="status_history")
-    status = models.CharField(max_length=20, choices=Guide.STATUS_CHOICES)
-    timestamp = models.DateTimeField(auto_now=True)
-    updatedBy = models.CharField(max_length=20)
-
+    guide = models.ForeignKey(
+        Guide,
+        on_delete=models.CASCADE,
+        related_name="status_history"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=Guide.STATUS_CHOICES
+    )
+    timestamp = models.DateTimeField(auto_now_add=True)
+    updatedBy = models.CharField( max_length=10)
+    
     def __str__(self):
         return f"{self.guide.trackingNumber} - {self.status}"

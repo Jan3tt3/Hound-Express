@@ -15,7 +15,7 @@ export default function StatusPanel() {
   );
 
   const countByStatus = (status: GuideStatus) =>
-    guides.filter((g) => g.status === status).length;
+    guides.filter((g) => g.currentStatus === status).length;
 
   return (
     <Panel as="section" aria-labelledby="status-panel-title">

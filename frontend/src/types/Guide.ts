@@ -3,13 +3,36 @@ export type GuideStatus =
   | "En tránsito"
   | "Entregada";
 
-export interface Guide {
-  id: string;
-  client: string;
-  origin: string;
-  destination: string;
+
+export interface GuideHistory {
+
+  id: number;
+
   status: GuideStatus;
+
+  timestamp: string;
+
+  updatedBy: string;
+}
+
+
+export interface Guide  {
+
+  id: number;
+
+  trackingNumber: string;
+
+  client: number;
+
+  origin: string;
+
+  destination: string;
+
   createdAt: string;
-  lastUpdate: string;
-  history: any[];
+
+  updatedAt: string;
+
+  currentStatus: GuideStatus;
+
+  status_history: GuideHistory[];
 }
